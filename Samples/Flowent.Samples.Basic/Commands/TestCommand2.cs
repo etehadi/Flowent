@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Flowent.Command;
 
 namespace Flowent.Samples.Basic.Commands
 {
     public class TestCommand2 : ICommand
     {
-        public int IntProp2 { get; set; }
-        public string Status2 { get; set; }
+        public int IntProp { get; set; }
+        public string Status { get; set; }
 
 
         public Task Execute()
@@ -18,6 +19,7 @@ namespace Flowent.Samples.Basic.Commands
             return Task.CompletedTask;
         }
 
+        public void Init() { }
         public void OnExecuted() { }
 
         public void OnExecuting() { }

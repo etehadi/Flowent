@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Flowent.Command;
+using Flowent.Exceptions;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Flowent
 {
     public class ValidatorAction<TCommand> where TCommand : ICommand, new()
     {
         Validator<TCommand> _validator;
-        Func<TCommand, Exception>? _action;
+        Func<TCommand, Exception> _action;
 
 
-        public ValidatorAction(Validator<TCommand> validator)
+        internal ValidatorAction(Validator<TCommand> validator)
         {
             _validator = validator;
+            _action = cmd => new ValidatorException();
         }
 
 
@@ -26,7 +30,7 @@ namespace Flowent
 
         public Validator<TCommand> Throw(Func<TCommand, Exception> action) => Throw<Exception>(action);
 
-        public Exception Run(TCommand cmd) => _action?.Invoke(cmd) ?? throw new Exception("Invalid ValidatorAction instance. Specify a valid action for current VlidatorAction instance.");
-        
+        internal async Task<Exception> Run(TCommand cmd) => await Task.Run(() => _action(cmd));
+
     }
 }

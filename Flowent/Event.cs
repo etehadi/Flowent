@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Flowent.Command;
 
 namespace Flowent
 {
     public class Event<TCommand> where TCommand : ICommand, new()
     {
-        CommandBuilder<TCommand> _currentAction;
+        FlowBuilder<TCommand> _currentAction;
         List<Func<TCommand, Task>> _onExecuted;
         List<(Type exceptionType, Func<TCommand, Exception, Task> handler)> _onException;
 
-        public CommandBuilder<TCommand> EndOn => this._currentAction;
+        public FlowBuilder<TCommand> EndOn => this._currentAction;
 
         //Methods
 
@@ -21,18 +22,28 @@ namespace Flowent
             try
             {
                 await commandInstance.Execute();
+                await Task.WhenAll(_onExecuted.Select(e => e(commandInstance)));
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                _onException.Where(e => e.exceptionType.Equals(ex.GetType()))
-                    .ToList()
-                    .ForEach(async e => await e.handler(commandInstance, ex));
-            }
+                var exceptionHandlers = _onException.Where(e => e.exceptionType.IsAssignableFrom(exception.GetType())).Select(e => e.handler(commandInstance, exception))
+                                 .Union(embeddedExceptions(commandInstance).Select(p => p(commandInstance, exception)));
 
-            _onExecuted.ForEach(e => e(commandInstance));
+                await Task.WhenAll(exceptionHandlers);
+            }
         }
 
-        internal Event(CommandBuilder<TCommand> currentAction)
+        private List<Func<TCommand, Exception, Task>> embeddedExceptions(TCommand cmdInstance)
+        {
+            List<Func<TCommand, Exception, Task>> result = new();
+            ICommandExceptionHandler? cmdInstanceCommandHandler = cmdInstance as ICommandExceptionHandler;
+            if (cmdInstanceCommandHandler != null)
+                result.Add((TCommand command, Exception ex) => cmdInstanceCommandHandler.ExceptionHandler(ex));
+
+            return result;
+        }
+
+        internal Event(FlowBuilder<TCommand> currentAction)
         {
             _currentAction = currentAction;
             _onExecuted = new List<Func<TCommand, Task>>();
@@ -83,5 +94,7 @@ namespace Flowent
 
             return this;
         }
+
+
     }
 }
