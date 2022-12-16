@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Flowent.Sample.MediatR.LeaveManagement.Application.DTOs.LeaveType.Validators;
 using Flowent.Sample.MediatR.LeaveManagement.Application.Features.LeaveTypes.Requests.Commands;
-using Flowent.Sample.MediatR.LeaveManagement.Application.Persistence.Contracts;
+using Flowent.Sample.MediatR.LeaveManagement.Application.Contracts.Persistence;
 using Flowent.Sample.MediatR.LeaveManagement.Domain;
 using MediatR;
 using System;

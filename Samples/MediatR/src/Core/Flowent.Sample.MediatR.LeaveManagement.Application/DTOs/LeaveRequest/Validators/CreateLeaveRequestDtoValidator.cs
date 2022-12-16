@@ -1,4 +1,4 @@
-﻿using Flowent.Sample.MediatR.LeaveManagement.Application.Persistence.Contracts;
+﻿using Flowent.Sample.MediatR.LeaveManagement.Application.Contracts.Persistence;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Flowent.Sample.MediatR.LeaveManagement.Application.DTOs.LeaveType;
 using Flowent.Sample.MediatR.LeaveManagement.Application.Features.LeaveTypes.Requests.Queries;
-using Flowent.Sample.MediatR.LeaveManagement.Application.Persistence.Contracts;
+using Flowent.Sample.MediatR.LeaveManagement.Application.Contracts.Persistence;
 using MediatR;
 using System;
 using System.Collections.Generic;

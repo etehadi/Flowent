@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flowent.Sample.MediatR.LeaveManagement.Application.Persistence.Contracts;
+namespace Flowent.Sample.MediatR.LeaveManagement.Application.Contracts.Persistence;
 
 public interface ILeaveAllocationRepository : IGenericRepository<LeaveAllocation>
 {
     Task<LeaveAllocation> GetLeaveAllocationWithDetails(int id);
-    Task<List<LeaveAllocation>> GetLeaveAllocationsWithDetails();
+    Task<List<LeaveAllocation?>> GetLeaveAllocationsWithDetails();
 }
